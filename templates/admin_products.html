@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}All products{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Platform administration</span>
+  <h1>Products</h1>
+</div>
+<div class="wrap section" style="padding-top:0">
+  {% if products %}
+  <table class="data-table">
+    <thead><tr><th>Product</th><th>Artisan</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.artisan.business_name }}</td>
+        <td>{{ p.category.name if p.category else "—" }}</td>
+        <td>₹{{ "%.0f"|format(p.price) }}</td>
+        <td>{{ p.stock }}</td>
+        <td><span class="badge {{ 'badge-verified' if p.status == 'active' else 'badge-rejected' }}">{{ p.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No products listed yet</h3></div>
+  {% endif %}
+</div>
+{% endblock %}

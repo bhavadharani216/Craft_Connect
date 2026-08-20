@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Step 2 of 2</span>
+  <h1>Checkout</h1>
+</div>
+
+<div class="wrap section" style="padding-top:0">
+  <div class="cart-layout">
+    <form method="post">
+      <h3>Shipping address</h3>
+      <div class="field">
+        <label for="address">Delivery address</label>
+        <textarea id="address" name="address" rows="3" required placeholder="House no, street, city, state, PIN code">{{ current_user.name }}</textarea>
+      </div>
+
+      <h3 style="margin-top:28px">Payment method</h3>
+      <div class="payment-options">
+        <label><input type="radio" name="payment_method" value="UPI" checked> UPI</label>
+        <label><input type="radio" name="payment_method" value="Card"> Credit / Debit card</label>
+        <label><input type="radio" name="payment_method" value="COD"> Cash on delivery</label>
+      </div>
+      <p style="font-size:.8rem;color:var(--muted)">This is a simulated payment for demo purposes — no real transaction takes place.</p>
+
+      <button type="submit" class="btn btn-block">Pay ₹{{ "%.0f"|format(total) }}</button>
+    </form>
+
+    <div class="summary-card">
+      <h3>Order summary</h3>
+      {% for item in items %}
+      <div class="summary-row"><span>{{ item.product.name }} × {{ item.qty }}</span><span>₹{{ "%.0f"|format(item.subtotal) }}</span></div>
+      {% endfor %}
+      <div class="summary-row summary-total"><span>Total</span><span class="val">₹{{ "%.0f"|format(total) }}</span></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

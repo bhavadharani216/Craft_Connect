@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Artisan dashboard{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Artisan dashboard</span>
+  <h1>{{ artisan.business_name }}</h1>
+  {% if artisan.verification_status != 'verified' %}
+    <span class="badge badge-pending">Verification {{ artisan.verification_status }}</span>
+  {% else %}
+    <span class="badge badge-verified">Verified artisan</span>
+  {% endif %}
+</div>
+
+<div class="wrap">
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-value">{{ products_count }}</div><div class="stat-label">Products</div></div>
+    <div class="stat-card"><div class="stat-value">{{ total_orders }}</div><div class="stat-label">Total orders</div></div>
+    <div class="stat-card"><div class="stat-value">{{ pending }}</div><div class="stat-label">Pending orders</div></div>
+    <div class="stat-card"><div class="stat-value">₹{{ "%.0f"|format(total_sales) }}</div><div class="stat-label">Total sales</div></div>
+  </div>
+
+  <div class="section-head">
+    <h2>Quick links</h2>
+  </div>
+  <div class="hero-ctas" style="margin-bottom:36px">
+    <a href="{{ url_for('artisan_add_product') }}" class="btn">Add product</a>
+    <a href="{{ url_for('artisan_products') }}" class="btn btn-outline">Manage products</a>
+    <a href="{{ url_for('artisan_orders') }}" class="btn btn-outline">View orders</a>
+  </div>
+
+  <h2>Recent orders</h2>
+  {% if recent_orders %}
+  <table class="data-table">
+    <thead><tr><th>Order</th><th>Date</th><th>Total</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for o in recent_orders %}
+      <tr>
+        <td>#CC{{ 1000 + o.id }}</td>
+        <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+        <td>₹{{ "%.0f"|format(o.total_amount) }}</td>
+        <td><span class="badge badge-{{ o.order_status|lower }}">{{ o.order_status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No orders yet. Once customers buy your products, they'll show up here.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Order confirmed{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="form-page" style="text-align:center">
+    <span class="eyebrow" style="color:var(--success)">Payment successful</span>
+    <h1>Order #CC{{ 1000 + order.id }} confirmed</h1>
+    <p class="subtitle">Thank you! Your order has been placed and the artisan has been notified.</p>
+    <div class="summary-card" style="text-align:left">
+      <div class="summary-row"><span>Order status</span><span class="badge badge-pending">{{ order.order_status }}</span></div>
+      <div class="summary-row"><span>Payment method</span><span>{{ order.payment_method }}</span></div>
+      <div class="summary-row summary-total"><span>Total paid</span><span class="val">₹{{ "%.0f"|format(order.total_amount) }}</span></div>
+    </div>
+    <a href="{{ url_for('my_orders') }}" class="btn btn-block" style="margin-top:20px">View my orders</a>
+    <a href="{{ url_for('products') }}" class="btn btn-outline btn-block" style="margin-top:10px">Continue shopping</a>
+  </div>
+</div>
+{% endblock %}

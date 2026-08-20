@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Marketplace</span>
+  <h1>{% if q %}Results for "{{ q }}"{% else %}All products{% endif %}</h1>
+</div>
+
+<div class="wrap category-strip" style="padding-top:0">
+  <div class="chip-row">
+    <a href="{{ url_for('products', q=q) }}" class="chip {% if not selected_category %}active{% endif %}">All</a>
+    {% for c in categories %}
+      <a href="{{ url_for('products', category=c.id, q=q) }}" class="chip {% if selected_category == c.id %}active{% endif %}">{{ c.name }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="wrap section">
+  {% if products %}
+  <div class="product-grid">
+    {% for p in products %}
+      {% include "_product_card.html" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>No products found</h3>
+    <p>Try a different search term or browse another category.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

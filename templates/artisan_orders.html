@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Artisan dashboard</span>
+  <h1>Orders</h1>
+</div>
+<div class="wrap section" style="padding-top:0">
+  {% if orders %}
+  <table class="data-table">
+    <thead><tr><th>Order</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th>Update</th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>#CC{{ 1000 + o.id }}</td>
+        <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+        <td>
+          {% for i in o.items %}{% if i.artisan_id == artisan_id %}{{ i.product.name }} × {{ i.quantity }}<br>{% endif %}{% endfor %}
+        </td>
+        <td>₹{{ "%.0f"|format(o.total_amount) }}</td>
+        <td><span class="badge badge-{{ o.order_status|lower }}">{{ o.order_status }}</span></td>
+        <td>
+          <form action="{{ url_for('artisan_update_order_status', order_id=o.id) }}" method="post" class="status-form">
+            <select name="status">
+              {% for s in ["Pending","Preparing","Shipped","Delivered"] %}
+              <option value="{{ s }}" {% if o.order_status == s %}selected{% endif %}>{{ s }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-small">Update</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <h3>No orders yet</h3>
+    <p>Orders for your products will appear here.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

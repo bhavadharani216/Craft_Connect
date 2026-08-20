@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="form-page">
+    <span class="eyebrow">Join CraftConnect</span>
+    <h1>Create your account</h1>
+    <p class="subtitle">Shop handmade goods, or start selling your own craft.</p>
+    <form method="post">
+      <div class="role-toggle">
+        <label>
+          <input type="radio" name="role" value="customer" checked onchange="document.getElementById('artisanFields').style.display='none'">
+          <span>🛍️ I'm a customer</span>
+        </label>
+        <label>
+          <input type="radio" name="role" value="artisan" onchange="document.getElementById('artisanFields').style.display='block'">
+          <span>🎨 I'm an artisan</span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required minlength="6">
+      </div>
+
+      <div id="artisanFields" style="display:none">
+        <div class="field">
+          <label for="business_name">Business / craft name</label>
+          <input type="text" id="business_name" name="business_name" placeholder="e.g. Priya Crafts">
+        </div>
+        <div class="field">
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" placeholder="e.g. Coimbatore, Tamil Nadu">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-block">Create account</button>
+    </form>
+    <p class="form-footnote">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+  </div>
+</div>
+{% endblock %}

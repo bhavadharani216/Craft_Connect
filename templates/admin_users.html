@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Platform administration</span>
+  <h1>Customers</h1>
+</div>
+<div class="wrap section" style="padding-top:0">
+  {% if users %}
+  <table class="data-table">
+    <thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Orders</th></tr></thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.name }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+        <td>{{ u.orders|length }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No customers yet</h3></div>
+  {% endif %}
+</div>
+{% endblock %}

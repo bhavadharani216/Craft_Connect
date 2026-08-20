@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Manage artisans{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Platform administration</span>
+  <h1>Artisans</h1>
+</div>
+<div class="wrap section" style="padding-top:0">
+  <table class="data-table">
+    <thead><tr><th>Business</th><th>Location</th><th>Products</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for a in artisans %}
+      <tr>
+        <td>{{ a.business_name }}</td>
+        <td>{{ a.location }}</td>
+        <td>{{ a.products|length }}</td>
+        <td><span class="badge badge-{{ 'verified' if a.verification_status == 'verified' else ('rejected' if a.verification_status == 'rejected' else 'pending') }}">{{ a.verification_status }}</span></td>
+        <td>
+          <form action="{{ url_for('admin_verify_artisan', artisan_id=a.id) }}" method="post" class="status-form">
+            <select name="status">
+              <option value="pending" {% if a.verification_status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="verified" {% if a.verification_status == 'verified' %}selected{% endif %}>Verified</option>
+              <option value="rejected" {% if a.verification_status == 'rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+            <button type="submit" class="btn btn-small">Update</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<div class="product-card">
+  <a href="{{ url_for('product_detail', product_id=p.id) }}">
+    <div class="product-thumb">
+      {% if p.image %}
+        <img src="{{ url_for('static', filename='uploads/' + p.image) }}" alt="{{ p.name }}">
+      {% else %}
+        No photo yet
+      {% endif %}
+      <span class="handmade-badge">Handmade</span>
+    </div>
+  </a>
+  <div class="product-body">
+    {% if p.category %}<div class="product-cat">{{ p.category.name }}</div>{% endif %}
+    <a href="{{ url_for('product_detail', product_id=p.id) }}"><div class="product-name">{{ p.name }}</div></a>
+    <div class="product-artisan">by {{ p.artisan.business_name }}</div>
+    <div class="product-price">₹{{ "%.0f"|format(p.price) }}</div>
+    <div class="product-actions">
+      <form action="{{ url_for('cart_add', product_id=p.id) }}" method="post" style="flex:1">
+        <input type="hidden" name="qty" value="1">
+        <button type="submit" class="btn btn-small btn-block">Add to cart</button>
+      </form>
+    </div>
+  </div>
+</div>

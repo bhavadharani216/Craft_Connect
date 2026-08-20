@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}My products{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Artisan dashboard</span>
+  <h1>My products</h1>
+</div>
+<div class="wrap section" style="padding-top:0">
+  <div class="section-head">
+    <span></span>
+    <a href="{{ url_for('artisan_add_product') }}" class="btn">Add product</a>
+  </div>
+
+  {% if products %}
+  <table class="data-table">
+    <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.category.name if p.category else "—" }}</td>
+        <td>₹{{ "%.0f"|format(p.price) }}</td>
+        <td>{{ p.stock }}</td>
+        <td><span class="badge {{ 'badge-verified' if p.status == 'active' else 'badge-rejected' }}">{{ p.status }}</span></td>
+        <td>
+          <a href="{{ url_for('artisan_edit_product', product_id=p.id) }}" class="link-btn">Edit</a>
+          &nbsp;
+          <form action="{{ url_for('artisan_delete_product', product_id=p.id) }}" method="post" style="display:inline" onsubmit="return confirm('Delete this product?')">
+            <button type="submit" class="link-btn" style="color:var(--error)">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <h3>No products yet</h3>
+    <p>Add your first handmade product to start selling.</p>
+    <a href="{{ url_for('artisan_add_product') }}" class="btn">Add product</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

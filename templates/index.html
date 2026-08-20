@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <span class="eyebrow">Local Entrepreneurship · Handicrafts</span>
+      <h1>Handmade by <em>real</em> artisans, sold direct to you.</h1>
+      <p class="hero-sub">CraftConnect removes the middlemen between local craftspeople and the people who love their work — so more of every rupee reaches the hands that made it.</p>
+      <div class="hero-ctas">
+        <a href="{{ url_for('products') }}" class="btn">Shop the marketplace</a>
+        <a href="{{ url_for('register') }}" class="btn btn-outline">Sell your craft</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-tile">
+        <div class="tile-number">{{ categories|length }}+</div>
+        <div class="tile-label">Craft categories</div>
+      </div>
+      <div class="hero-tile">
+        <div class="tile-number">0%</div>
+        <div class="tile-label">Hidden middleman markup</div>
+      </div>
+      <div class="hero-tile">
+        <div class="tile-number">Direct</div>
+        <div class="tile-label">Artisan-to-customer orders</div>
+      </div>
+       
+    </div>
+  </div>
+  <div class="woven-divider"></div>
+</section>
+
+<div class="wrap category-strip">
+  <h2>Browse by craft</h2>
+  <div class="chip-row">
+    <a href="{{ url_for('products') }}" class="chip">All products</a>
+    {% for c in categories %}
+      <a href="{{ url_for('products', category=c.id) }}" class="chip">{{ c.name }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="wrap section">
+  <div class="section-head">
+    <h2>Freshly listed</h2>
+    <a href="{{ url_for('products') }}" class="link-btn">View all →</a>
+  </div>
+
+  {% if featured %}
+  <div class="product-grid">
+    {% for p in featured %}
+      {% include "_product_card.html" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>No products listed yet</h3>
+    <p>Be the first artisan to showcase your craft on CraftConnect.</p>
+    <a href="{{ url_for('register') }}" class="btn">Become an artisan</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

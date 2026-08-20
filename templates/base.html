@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CraftConnect{% endblock %} — Digital Marketplace for Local Artisans</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="{{ url_for('index') }}" class="logo">
+        <span class="logo-mark">✳</span> CraftConnect
+      </a>
+
+      <form class="header-search" action="{{ url_for('products') }}" method="get">
+        <input type="text" name="q" placeholder="Search handmade products…" value="{{ request.args.get('q','') }}">
+        <button type="submit" aria-label="Search">→</button>
+      </form>
+
+      <nav class="header-nav">
+        <a href="{{ url_for('products') }}">Shop</a>
+        {% if current_user.is_authenticated %}
+          {% if current_user.role == 'customer' %}
+            <a href="{{ url_for('my_orders') }}">My Orders</a>
+            <a href="{{ url_for('cart') }}" class="cart-link">Cart{% if cart_count %} <span class="cart-badge">{{ cart_count }}</span>{% endif %}</a>
+          {% elif current_user.role == 'artisan' %}
+            <a href="{{ url_for('artisan_dashboard') }}">Dashboard</a>
+          {% elif current_user.role == 'admin' %}
+            <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+          {% endif %}
+          <a href="{{ url_for('logout') }}">Log out</a>
+        {% else %}
+          <a href="{{ url_for('cart') }}" class="cart-link">Cart{% if cart_count %} <span class="cart-badge">{{ cart_count }}</span>{% endif %}</a>
+          <a href="{{ url_for('login') }}">Log in</a>
+          <a href="{{ url_for('register') }}" class="btn btn-small">Join</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap flash-wrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div>
+        <div class="logo footer-logo"><span class="logo-mark">✳</span> CraftConnect</div>
+        <p class="footer-tagline">A digital marketplace connecting local artisans directly with customers — supporting SDG 1: No Poverty through fair, direct market access.</p>
+      </div>
+      <div class="footer-links">
+        <span class="footer-heading">Marketplace</span>
+        <a href="{{ url_for('products') }}">Shop all products</a>
+        <a href="{{ url_for('register') }}">Sell on CraftConnect</a>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">Made for artisans, by design. — CraftConnect MVP</div>
+  </footer>
+</body>
+</html>

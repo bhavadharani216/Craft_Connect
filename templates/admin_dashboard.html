@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard{% endblock %}
+{% block content %}
+<div class="wrap dash-header">
+  <span class="eyebrow">Platform administration</span>
+  <h1>Admin dashboard</h1>
+</div>
+
+<div class="wrap">
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-value">{{ stats.users }}</div><div class="stat-label">Customers</div></div>
+    <div class="stat-card"><div class="stat-value">{{ stats.artisans }}</div><div class="stat-label">Artisans</div></div>
+    <div class="stat-card"><div class="stat-value">{{ stats.products }}</div><div class="stat-label">Products</div></div>
+    <div class="stat-card"><div class="stat-value">{{ stats.orders }}</div><div class="stat-label">Orders</div></div>
+    <div class="stat-card"><div class="stat-value">₹{{ "%.0f"|format(stats.revenue) }}</div><div class="stat-label">Revenue</div></div>
+  </div>
+
+  <div class="hero-ctas" style="margin-bottom:36px">
+    <a href="{{ url_for('admin_artisans') }}" class="btn btn-outline">Manage artisans</a>
+    <a href="{{ url_for('admin_products') }}" class="btn btn-outline">Manage products</a>
+    <a href="{{ url_for('admin_orders') }}" class="btn btn-outline">View orders</a>
+    <a href="{{ url_for('admin_users') }}" class="btn btn-outline">View customers</a>
+  </div>
+
+  <h2>Artisans pending verification</h2>
+  {% if pending_artisans %}
+  <table class="data-table">
+    <thead><tr><th>Business</th><th>Location</th><th>Products</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for a in pending_artisans %}
+      <tr>
+        <td>{{ a.business_name }}</td>
+        <td>{{ a.location }}</td>
+        <td>{{ a.products|length }}</td>
+        <td>
+          <form action="{{ url_for('admin_verify_artisan', artisan_id=a.id) }}" method="post" style="display:inline">
+            <input type="hidden" name="status" value="verified">
+            <button type="submit" class="btn btn-small btn-olive">Verify</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No artisans awaiting verification.</p>
+  {% endif %}
+</div>
+{% endblock %}

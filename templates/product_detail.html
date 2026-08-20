@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="pd-layout">
+    <div class="pd-image">
+      {% if product.image %}
+        <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="{{ product.name }}">
+      {% else %}
+        No photo yet
+      {% endif %}
+    </div>
+    <div>
+      {% if product.category %}<span class="eyebrow">{{ product.category.name }}</span>{% endif %}
+      <h1 class="pd-title">{{ product.name }}</h1>
+      <div class="pd-price">₹{{ "%.0f"|format(product.price) }}</div>
+      <p>{{ product.description or "A handmade product crafted with care by a local artisan." }}</p>
+
+      <div class="pd-meta">
+        <span class="stars">{{ "★" * (product.average_rating|round|int) }}{{ "☆" * (5 - (product.average_rating|round|int)) }}</span>
+        <span>{{ product.reviews|length }} review{{ 's' if product.reviews|length != 1 else '' }}</span>
+        <span>{{ product.stock }} in stock</span>
+      </div>
+
+      {% if product.stock > 0 %}
+      <form action="{{ url_for('cart_add', product_id=product.id) }}" method="post" class="qty-form">
+        <input type="number" name="qty" value="1" min="1" max="{{ product.stock }}" class="qty-input">
+        <button type="submit" class="btn">Add to cart</button>
+      </form>
+      {% else %}
+      <div class="flash flash-error" style="margin-top:20px">Currently out of stock</div>
+      {% endif %}
+
+      <div class="artisan-box">
+        <div class="artisan-avatar">{{ product.artisan.business_name[0] }}</div>
+        <div>
+          <strong>{{ product.artisan.business_name }}</strong>
+          {% if product.artisan.verification_status == 'verified' %}<span class="badge badge-verified">Verified</span>{% endif %}
+          <p style="margin:2px 0 0;font-size:.85rem">{{ product.artisan.location }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0">
+    <h2>Reviews</h2>
+    {% if product.reviews %}
+      {% for r in product.reviews %}
+      <div class="review">
+        <div class="review-header">
+          <span>{{ r.customer.name }}</span>
+          <span class="stars">{{ "★" * r.rating }}{{ "☆" * (5 - r.rating) }}</span>
+        </div>
+        {% if r.comment %}<p style="margin-top:6px">{{ r.comment }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p>No reviews yet — be the first to share your experience.</p>
+    {% endif %}
+
+    {% if current_user.is_authenticated and current_user.role == 'customer' %}
+    <form action="{{ url_for('add_review', product_id=product.id) }}" method="post" style="max-width:480px;margin-top:20px">
+      <div class="field">
+        <label for="rating">Your rating</label>
+        <select name="rating" id="rating">
+          <option value="5">★★★★★</option>
+          <option value="4">★★★★☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="1">★☆☆☆☆</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="comment">Your review</label>
+        <textarea name="comment" id="comment" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-outline">Submit review</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
